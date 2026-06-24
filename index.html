@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>100 Schritte zu 100K · The Escape Theory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+<style>
+  /* =========================================================
+     TET „100 Schritte zu 100K" — Lead-Magnet MVP
+     ---------------------------------------------------------
+     ⚙️  ANPASSEN könnt ihr unten im <script>:
+         • CONFIG  → die beiden Tracking-Links (Circle + Call)
+         • STAGES  → Fragen, Kennzahlen & Benchmark-Schwellen
+     Branding: Navy #0d1c32 · Hellblau #b3dde9 · Camel #cdb08f
+     Schrift: Jost (Body/Header) · Playfair Display (Serif-Akzent)
+     ========================================================= */
+  :root{
+    --navy:#0d1c32;
+    --navy-2:#13263f;
+    --navy-3:#1b3251;
+    --hellblau:#b3dde9;
+    --camel:#cdb08f;
+    --white:#ffffff;
+    --green:#56c596;
+    --amber:#cdb08f;
+    --red:#e08a7d;
+    --muted:rgba(255,255,255,.55);
+    --line:rgba(179,221,233,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:'Jost',system-ui,sans-serif;
+    letter-spacing:-.01em;
+    background:var(--navy);
+    color:var(--white);
+    min-height:100vh;
+    overflow-x:hidden;
+    line-height:1.5;
+  }
+  /* Texture + Eck-Shapes (Brandbook: Blue Texture / Shapes in the Corners) */
+  body::before,body::after{content:"";position:fixed;z-index:0;border-radius:50%;filter:blur(8px);opacity:.16;pointer-events:none}
+  body::before{width:340px;height:340px;top:-150px;right:-120px;background:radial-gradient(circle,var(--hellblau),transparent 70%)}
+  body::after{width:380px;height:380px;bottom:-170px;left:-150px;background:radial-gradient(circle,var(--camel),transparent 70%)}
+  .grain{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.04;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+  .wrap{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:28px 20px 56px;min-height:100vh;display:flex;flex-direction:column}
+
+  /* Header */
+  .brand{display:flex;align-items:center;gap:9px;justify-content:center;margin-bottom:8px}
+  .brand .dot{width:7px;height:7px;border-radius:50%;background:var(--camel)}
+  .brand span{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--hellblau);font-weight:500}
+
+  .screen{display:none;animation:fade .45s ease both}
+  .screen.active{display:flex;flex-direction:column;flex:1}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  /* ---------- INTRO ---------- */
+  .intro{justify-content:center;text-align:center;gap:22px;flex:1}
+  .eyebrow{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--camel);font-weight:600}
+  h1{font-family:'Playfair Display',serif;font-weight:700;font-size:clamp(34px,9vw,46px);line-height:1.05}
+  h1 .num{color:var(--hellblau)}
+  .lead{font-size:17px;color:rgba(255,255,255,.82);max-width:30ch;margin:0 auto}
+  .meta-row{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;color:var(--muted);font-size:13px}
+  .meta-row b{color:var(--hellblau);font-weight:600}
+
+  .btn{font-family:'Jost',sans-serif;font-weight:600;font-size:16px;letter-spacing:-.01em;border:0;border-radius:14px;padding:16px 26px;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease;display:inline-flex;align-items:center;justify-content:center;gap:10px;text-decoration:none}
+  .btn-primary{background:linear-gradient(135deg,var(--camel),#dcc4a6);color:var(--navy);box-shadow:0 10px 26px rgba(205,176,143,.28)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(205,176,143,.38)}
+  .btn-ghost{background:transparent;color:var(--hellblau);border:1px solid var(--line)}
+  .btn-ghost:hover{background:rgba(179,221,233,.07)}
+  .btn-block{width:100%}
+
+  /* ---------- WIZARD ---------- */
+  .progress{height:5px;border-radius:99px;background:rgba(255,255,255,.09);overflow:hidden;margin-bottom:6px}
+  .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--hellblau),var(--camel));width:0;transition:width .4s ease}
+  .step-count{font-size:12px;color:var(--muted);text-align:right;margin-bottom:18px;letter-spacing:.04em}
+
+  .qcard{background:linear-gradient(180deg,var(--navy-2),var(--navy));border:1px solid var(--line);border-radius:22px;padding:26px 22px;flex:1;display:flex;flex-direction:column}
+  .stage-ico{width:54px;height:54px;border-radius:15px;display:grid;place-items:center;font-size:26px;background:rgba(179,221,233,.1);border:1px solid var(--line);margin-bottom:16px}
+  .stage-kicker{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--camel);font-weight:600;margin-bottom:4px}
+  .stage-title{font-family:'Playfair Display',serif;font-size:27px;font-weight:700;margin-bottom:6px}
+  .stage-sub{color:rgba(255,255,255,.7);font-size:15px;margin-bottom:22px}
+
+  .qblock{border-top:1px solid var(--line);padding-top:18px;margin-top:4px}
+  .qblock:first-of-type{border-top:0;padding-top:0;margin-top:0}
+  .q{font-size:16px;font-weight:500;margin-bottom:12px;color:#fff}
+  .toggle{display:flex;gap:10px}
+  .toggle button{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--line);color:#fff;border-radius:12px;padding:13px;font-family:inherit;font-size:15px;font-weight:500;cursor:pointer;transition:.18s}
+  .toggle button.on-yes{background:rgba(86,197,150,.16);border-color:var(--green);color:#fff}
+  .toggle button.on-no{background:rgba(224,138,125,.16);border-color:var(--red);color:#fff}
+
+  .metrics{margin-top:16px;display:grid;gap:14px}
+  .metric{display:none}
+  .metric.show{display:block;animation:fade .3s ease both}
+  .metric label{display:block;font-size:14px;color:rgba(255,255,255,.78);margin-bottom:7px}
+  .metric .inrow{display:flex;align-items:center;gap:10px}
+  .metric input,.metric select{flex:1;background:var(--navy-3);border:1px solid var(--line);color:#fff;border-radius:11px;padding:13px 14px;font-family:inherit;font-size:16px;width:100%}
+  .metric input:focus,.metric select:focus{outline:none;border-color:var(--hellblau)}
+  .metric .unit{font-size:13px;color:var(--muted);white-space:nowrap}
+  .opt-hint{font-size:12px;color:var(--muted);margin-top:14px;font-style:italic}
+
+  .nav{display:flex;gap:12px;margin-top:22px}
+  .nav .btn{flex:1}
+
+  /* ---------- RESULT ---------- */
+  .result-head{text-align:center;margin-bottom:8px}
+  .result-head .eyebrow{margin-bottom:10px}
+  .stufe-big{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;line-height:1.12}
+  .stufe-big b{color:var(--hellblau)}
+
+  .gauge{margin:20px auto 6px;max-width:280px;text-align:center}
+  .gauge .pct{font-family:'Playfair Display',serif;font-size:52px;font-weight:700;color:var(--camel);line-height:1}
+  .gauge .pct small{font-size:22px;color:var(--muted)}
+  .gauge .glabel{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+  .gbar{height:9px;border-radius:99px;background:rgba(255,255,255,.09);overflow:hidden;margin-top:14px}
+  .gbar > i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--red),var(--camel) 55%,var(--green));transition:width 1s cubic-bezier(.2,.8,.2,1)}
+
+  /* staircase */
+  .stairs{margin:26px 0 8px;display:flex;flex-direction:column;gap:9px}
+  .step{position:relative;display:flex;align-items:center;gap:12px;border-radius:14px;padding:13px 15px;border:1px solid var(--line);background:rgba(255,255,255,.03);transition:.2s}
+  .step .sdot{width:13px;height:13px;border-radius:50%;flex:none;box-shadow:0 0 0 4px rgba(255,255,255,.04)}
+  .step .stxt{flex:1;min-width:0}
+  .step .sname{font-size:15px;font-weight:600}
+  .step .sstat{font-size:12.5px;color:var(--muted)}
+  .step .snum{font-size:11px;color:var(--muted);font-weight:500;letter-spacing:.1em}
+  .step.s-strong{border-color:rgba(86,197,150,.5);background:rgba(86,197,150,.08)}
+  .step.s-strong .sdot{background:var(--green)}
+  .step.s-mittel{border-color:rgba(205,176,143,.5);background:rgba(205,176,143,.08)}
+  .step.s-mittel .sdot{background:var(--amber)}
+  .step.s-fehlt{border-color:rgba(224,138,125,.45);background:rgba(224,138,125,.07)}
+  .step.s-fehlt .sdot{background:var(--red)}
+  .step .here{position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--navy);background:var(--hellblau);padding:3px 8px;border-radius:99px;font-weight:600}
+  .peak{text-align:center;font-size:13px;color:var(--camel);letter-spacing:.12em;text-transform:uppercase;margin-bottom:2px}
+
+  .gaps{background:linear-gradient(180deg,var(--navy-2),var(--navy));border:1px solid var(--line);border-radius:18px;padding:20px;margin:22px 0}
+  .gaps h3{font-family:'Playfair Display',serif;font-size:19px;margin-bottom:14px}
+  .gaps ul{list-style:none;display:grid;gap:11px}
+  .gaps li{display:flex;gap:11px;font-size:14.5px;color:rgba(255,255,255,.85);align-items:flex-start}
+  .gaps li::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--red);margin-top:6px;flex:none}
+  .gaps li.ok::before{background:var(--green)}
+  .gaps .allgood{font-size:15px;color:rgba(255,255,255,.85)}
+
+  .cta-box{background:linear-gradient(135deg,var(--navy-3),var(--navy-2));border:1px solid var(--line);border-radius:20px;padding:24px 20px;text-align:center;margin-top:4px}
+  .cta-box h3{font-family:'Playfair Display',serif;font-size:22px;margin-bottom:8px}
+  .cta-box p{font-size:14.5px;color:rgba(255,255,255,.8);margin-bottom:18px}
+  .cta-box .btn{margin-bottom:11px}
+  .restart{display:block;text-align:center;margin-top:22px;color:var(--muted);font-size:13px;background:none;border:0;cursor:pointer;width:100%;font-family:inherit;text-decoration:underline}
+  .footer{text-align:center;margin-top:26px;color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.04em}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="wrap">
+  <div class="brand"><span class="dot"></span><span>The Escape Theory</span></div>
+
+  <!-- ============ SCREEN 1: INTRO ============ -->
+  <section class="screen intro active" id="screen-intro">
+    <div class="eyebrow">Der 100K-Check</div>
+    <h1>100 Schritte zu <span class="num">100K</span></h1>
+    <p class="lead">Wo stehst du auf dem Weg zu einem <b>vollautomatisierten Business</b>, das 100.000&nbsp;€/Monat macht? Finde heraus, welche Stufe dir noch fehlt.</p>
+    <div class="meta-row"><span>⏱️ <b>2 Minuten</b></span><span>🎁 <b>Kostenlos</b></span><span>📊 Sofort-Auswertung</span></div>
+    <button class="btn btn-primary" onclick="start()">Jetzt herausfinden →</button>
+  </section>
+
+  <!-- ============ SCREEN 2: WIZARD ============ -->
+  <section class="screen" id="screen-wizard">
+    <div class="progress"><i id="prog"></i></div>
+    <div class="step-count" id="stepCount"></div>
+    <div class="qcard" id="qcard"><!-- gerendert per JS --></div>
+  </section>
+
+  <!-- ============ SCREEN 3: RESULT ============ -->
+  <section class="screen" id="screen-result">
+    <div class="result-head">
+      <div class="eyebrow">Deine Auswertung</div>
+      <div class="stufe-big" id="stufeBig"></div>
+    </div>
+    <div class="gauge">
+      <div class="pct" id="pct">0<small>%</small></div>
+      <div class="glabel">100K-Reifegrad</div>
+      <div class="gbar"><i id="gbar"></i></div>
+    </div>
+
+    <div class="peak">🏔️ 100K · Vollautomatisiert</div>
+    <div class="stairs" id="stairs"></div>
+
+    <div class="gaps" id="gaps"></div>
+
+    <div class="cta-box">
+      <h3>Wo ist dein Bottleneck?</h3>
+      <p>Im kostenlosen Strategiegespräch werten wir deine Zahlen gemeinsam aus und zeigen dir den schnellsten Weg zur nächsten Stufe.</p>
+      <a class="btn btn-primary btn-block" id="ctaCall" href="#" target="_blank" rel="noopener">Strategiegespräch buchen →</a>
+      <a class="btn btn-ghost btn-block" id="ctaCircle" href="#" download>📊 Volles Tracking-Sheet herunterladen</a>
+    </div>
+
+    <button class="restart" onclick="restart()">↺ Check neu starten</button>
+  </section>
+
+  <div class="footer">© The Escape Theory · 100 Schritte zu 100K</div>
+</div>
+
+<script>
+/* =================================================================
+   1) CONFIG — TRACKING-LINKS (UTM)
+   Ändert NUR die Basis-URL, die UTM-Parameter messen den Lead-Magneten.
+   ================================================================= */
+const CONFIG = {
+  // Strategiegespräch / Analyse-Call (CTA im Ergebnis)
+  callUrl: "https://strategie.lovelifepassport.com/strategiejuni26?utm_source=leadmagnet&utm_medium=tool&utm_campaign=100-schritte-zu-100k&utm_content=strategiegespraech",
+  // Direkter Download des Tracking-Sheets (liegt im selben Ordner wie diese Seite)
+  sheetUrl: "100-Schritte-zu-100K-Tracking-System.xlsx"
+};
+
+/* =================================================================
+   2) STAGES — Fragen, Kennzahlen & Benchmarks (Ampel)
+   Pro metric: green/yellow = Schwellen (höher = besser).
+   ⚠️ Benchmark-Entwurf — Team korrigiert Montag.
+   ================================================================= */
+const STAGES = [
+  { key:'sm', icon:'📣', kicker:'Stufe 0', name:'Sichtbarkeit', sub:'Du machst organisch Content und wirst gesehen.',
+    blocks:[{ id:'sm', have:'Postest du regelmäßig auf Social Media?',
+      metrics:[
+        {key:'posts', q:'Posts pro Woche', unit:'Posts/Wo', green:5, yellow:2},
+        {key:'smleads', q:'Anfragen / Leads über Social Media pro Monat', unit:'/Monat', green:10, yellow:1},
+      ]}]},
+
+  { key:'freebie', icon:'🧲', kicker:'Stufe 1', name:'Leads sammeln', sub:'Du fängst Kontakte ein — mit einem Freebie / Lead-Magneten.',
+    blocks:[{ id:'freebie', have:'Hast du ein Freebie / einen Lead-Magneten?',
+      metrics:[
+        {key:'optins', q:'Opt-ins pro Monat', unit:'/Monat', green:100, yellow:20},
+        {key:'optinrate', q:'Opt-in-Rate auf der Seite (optional)', unit:'%', green:40, yellow:25},
+      ]}]},
+
+  { key:'verkauf', icon:'🤝', kicker:'Stufe 2', name:'Verkaufen', sub:'Du verkaufst — im Erstgespräch und/oder über ein Webinar.',
+    blocks:[
+      { id:'erst', have:'Verkaufst du über Erstgespräche / Calls?',
+        metrics:[
+          {key:'showup_e', q:'Show-up-Rate der Calls', unit:'%', green:75, yellow:60},
+          {key:'close_e', q:'Abschlussrate im Gespräch', unit:'%', green:25, yellow:15},
+        ]},
+      { id:'web', have:'Verkaufst du über ein Webinar?',
+        metrics:[
+          {key:'showup_w', q:'Anmeldung → Show-up-Rate', unit:'%', green:40, yellow:30},
+          {key:'close_w', q:'Webinar → Closing-Call-Rate', unit:'%', green:15, yellow:8},
+        ]}
+    ]},
+
+  { key:'evergreen', icon:'⚙️', kicker:'Stufe 3', name:'Automatisieren', sub:'Dein Verkaufsweg läuft automatisiert (Evergreen) — ohne dich live.',
+    blocks:[{ id:'ever', have:'Läuft dein Verkauf automatisiert (Evergreen)?',
+      metrics:[
+        {key:'roas', q:'ROAS (Umsatz ÷ Werbekosten)', unit:'x', green:2.5, yellow:1.5},
+      ]}]},
+
+  { key:'hundertk', icon:'🏔️', kicker:'Stufe 4 · Ziel', name:'Vollautomatisiert', sub:'Mehrere Quellen, Order Bumps — das System macht 100K/Monat ohne dich.',
+    blocks:[{ id:'hk', have:'Macht dein Business bereits ~100K/Monat vollautomatisiert?',
+      metrics:[
+        {key:'umsatz', q:'Monatsumsatz', unit:'€', green:100000, yellow:30000},
+        {key:'quellen', q:'Anzahl Lead-Quellen / Funnel', unit:'Quellen', green:3, yellow:2},
+      ]}]},
+];
+
+/* =================================================================
+   3) ENGINE
+   ================================================================= */
+let idx = 0;                       // aktuelle Stufe im Wizard
+const answers = {};                // {stageKey:{blockId:{have:bool, metrics:{key:val}}}}
+
+const $ = s => document.querySelector(s);
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$('#'+id).classList.add('active');window.scrollTo(0,0);}
+
+function start(){ idx=0; renderStage(); show('screen-wizard'); }
+function restart(){ for(const k in answers) delete answers[k]; idx=0; show('screen-intro'); }
+
+function renderStage(){
+  const st = STAGES[idx];
+  answers[st.key] = answers[st.key] || {};
+  $('#prog').style.width = ((idx)/STAGES.length*100)+'%';
+  $('#stepCount').textContent = `Stufe ${idx} von ${STAGES.length-1}`;
+
+  let blocksHtml = st.blocks.map(b=>{
+    const a = answers[st.key][b.id] || {have:null,metrics:{}};
+    const metricsHtml = b.metrics.map(m=>{
+      const val = (a.metrics&&a.metrics[m.key]!=null)?a.metrics[m.key]:'';
+      return `<div class="metric" data-metric="${b.id}.${m.key}">
+        <label>${m.q}</label>
+        <div class="inrow">
+          <input type="number" inputmode="decimal" min="0" placeholder="0" value="${val}"
+                 oninput="setMetric('${st.key}','${b.id}','${m.key}',this.value)">
+          <span class="unit">${m.unit}</span>
+        </div></div>`;
+    }).join('');
+    return `<div class="qblock">
+      <div class="q">${b.have}</div>
+      <div class="toggle">
+        <button type="button" data-yn="yes" onclick="setHave('${st.key}','${b.id}',true)">Ja</button>
+        <button type="button" data-yn="no" onclick="setHave('${st.key}','${b.id}',false)">Noch nicht</button>
+      </div>
+      <div class="metrics" data-metrics="${b.id}">${metricsHtml}</div>
+    </div>`;
+  }).join('');
+
+  $('#qcard').innerHTML = `
+    <div class="stage-ico">${st.icon}</div>
+    <div class="stage-kicker">${st.kicker}</div>
+    <div class="stage-title">${st.name}</div>
+    <div class="stage-sub">${st.sub}</div>
+    ${blocksHtml}
+    <div class="opt-hint">Zahlen optional — auch ohne kommst du zum Ergebnis. Was du nicht weißt, werten wir im Strategiegespräch aus.</div>
+    <div class="nav">
+      ${idx>0?'<button class="btn btn-ghost" onclick="prev()">Zurück</button>':''}
+      <button class="btn btn-primary" onclick="next()">${idx<STAGES.length-1?'Weiter':'Auswertung ansehen'}</button>
+    </div>`;
+
+  // bestehende Antworten wiederherstellen
+  st.blocks.forEach(b=>{
+    const a = answers[st.key][b.id];
+    if(a && a.have!=null) applyHaveUI(st.key,b.id,a.have);
+  });
+}
+
+function applyHaveUI(stageKey,blockId,val){
+  const block = [...document.querySelectorAll('.qblock')].find(q=>q.querySelector(`[data-metrics="${blockId}"]`));
+  if(!block) return;
+  const [yes,no] = block.querySelectorAll('.toggle button');
+  yes.classList.toggle('on-yes', val===true);
+  no.classList.toggle('on-no', val===false);
+  block.querySelectorAll('.metric').forEach(m=>m.classList.toggle('show', val===true));
+}
+
+function setHave(stageKey,blockId,val){
+  answers[stageKey] = answers[stageKey] || {};
+  answers[stageKey][blockId] = answers[stageKey][blockId] || {have:null,metrics:{}};
+  answers[stageKey][blockId].have = val;
+  applyHaveUI(stageKey,blockId,val);
+}
+function setMetric(stageKey,blockId,mKey,val){
+  answers[stageKey] = answers[stageKey] || {};
+  answers[stageKey][blockId] = answers[stageKey][blockId] || {have:null,metrics:{}};
+  answers[stageKey][blockId].metrics[mKey] = val===''?null:parseFloat(val);
+}
+
+function next(){ if(idx<STAGES.length-1){idx++;renderStage();} else compute(); }
+function prev(){ if(idx>0){idx--;renderStage();} }
+
+/* ---- Bewertung ---- */
+function evalBlock(stage,block){
+  const a = (answers[stage.key]||{})[block.id];
+  if(!a || a.have!==true) return {present:false};
+  // perf über vorhandene Metriken: schlechteste zählt
+  let worst = 'strong', anyData=false;
+  block.metrics.forEach(m=>{
+    const v = a.metrics[m.key];
+    if(v==null || isNaN(v)) return;
+    anyData=true;
+    let s = v>=m.green?'strong':(v>=m.yellow?'mittel':'fehlt');
+    const rank={strong:0,mittel:1,fehlt:2};
+    if(rank[s]>rank[worst]) worst=s;
+  });
+  if(!anyData) return {present:true, status:'mittel', nodata:true};
+  return {present:true, status:worst, nodata:false};
+}
+function evalStage(stage){
+  // Stufe vorhanden, wenn IRGENDEIN Block vorhanden; Status = bester Block
+  const evals = stage.blocks.map(b=>evalBlock(stage,b));
+  const present = evals.some(e=>e.present);
+  if(!present) return {present:false, status:'fehlt'};
+  const rank={strong:0,mittel:1,fehlt:2};
+  let best='fehlt', nodata=false;
+  evals.filter(e=>e.present).forEach(e=>{ if(rank[e.status]<rank[best]) best=e.status; if(e.nodata) nodata=true; });
+  return {present:true, status:best, nodata};
+}
+
+function compute(){
+  $('#prog').style.width='100%';
+  const results = STAGES.map(evalStage);
+
+  // Reifegrad: pro Stufe max 20% (10 vorhanden + 10 Performance)
+  let score=0;
+  results.forEach(r=>{
+    if(!r.present) return;
+    score += 10;
+    score += r.status==='strong'?10:(r.status==='mittel'?5:0);
+  });
+  score = Math.round(score);
+
+  // aktuelle Stufe = höchste vorhandene
+  let cur=-1;
+  results.forEach((r,i)=>{ if(r.present) cur=i; });
+  const curName = cur<0 ? 'am Start' : `auf Stufe ${cur}: ${STAGES[cur].name}`;
+  $('#stufeBig').innerHTML = cur<0
+    ? 'Du stehst <b>ganz am Anfang</b> — perfekter Startpunkt.'
+    : `Du stehst <b>${curName}</b>.`;
+
+  // Gauge
+  setTimeout(()=>{ $('#gbar').style.width=score+'%'; },120);
+  animateNum($('#pct'), score);
+
+  // Treppe (oben = Stufe 4)
+  const statusText = {strong:'Läuft stark', mittel:'Läuft — ausbaufähig', fehlt:'Läuft — aber Bottleneck'};
+  let stairsHtml='';
+  for(let i=STAGES.length-1;i>=0;i--){
+    const st=STAGES[i], r=results[i];
+    const cls = !r.present?'s-fehlt':('s-'+r.status);
+    const stat = !r.present?'Fehlt noch':(r.nodata?'Vorhanden · Zahlen offen':statusText[r.status]);
+    stairsHtml += `<div class="step ${cls}" style="margin-right:${i*10}px">
+      <span class="sdot"></span>
+      <div class="stxt"><div class="sname">${st.icon} ${st.name}</div><div class="sstat">${stat}</div></div>
+      <span class="snum">ST ${i}</span>
+      ${i===cur?'<span class="here">Du bist hier</span>':''}
+    </div>`;
+  }
+  $('#stairs').innerHTML=stairsHtml;
+
+  // Lücken
+  const gaps=[];
+  results.forEach((r,i)=>{
+    const st=STAGES[i];
+    if(!r.present) gaps.push({txt:`<b>Stufe ${i} – ${st.name}</b> fehlt dir noch komplett.`,ok:false});
+    else if(r.nodata) gaps.push({txt:`<b>Stufe ${i} – ${st.name}:</b> du hast es, aber die Zahlen fehlen — genau das werten wir im Call aus.`,ok:false});
+    else if(r.status==='fehlt') gaps.push({txt:`<b>Stufe ${i} – ${st.name}:</b> läuft, aber hier steckt ein Bottleneck.`,ok:false});
+    else if(r.status==='mittel') gaps.push({txt:`<b>Stufe ${i} – ${st.name}:</b> solide, aber noch Luft nach oben.`,ok:false});
+  });
+  const gapsEl=$('#gaps');
+  if(gaps.length===0){
+    gapsEl.innerHTML=`<h3>Stark. 🔥</h3><p class="allgood">Alle Stufen laufen rund — Zeit, das System zu skalieren und auf Vollgas zu bringen.</p>`;
+  }else{
+    gapsEl.innerHTML=`<h3>Das fehlt dir noch bis 100K:</h3><ul>${gaps.map(g=>`<li class="${g.ok?'ok':''}">${g.txt}</li>`).join('')}</ul>`;
+  }
+
+  // Links setzen
+  $('#ctaCall').href=CONFIG.callUrl;
+  $('#ctaCircle').href=CONFIG.sheetUrl;
+
+  show('screen-result');
+}
+
+function animateNum(el,target){
+  let n=0; const step=Math.max(1,Math.round(target/40));
+  const t=setInterval(()=>{ n+=step; if(n>=target){n=target;clearInterval(t);} el.innerHTML=n+'<small>%</small>'; },22);
+}
+</script>
+</body>
+</html>
