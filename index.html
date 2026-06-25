@@ -196,13 +196,20 @@ const CONFIG = {
 };
 
 /* ===== 2) Antwort-Stufen (Achse 2: KI-Automatisierungsgrad) ===== */
+// 4-stufig für Stufen, die man von Hand ODER mit KI machen kann (0–2)
 const STATES = [
   {k:'nein',   label:'Noch nicht',           sub:'mache ich (noch) gar nicht', ki:null, present:false, neg:true},
   {k:'manuell',label:'Ja, manuell',          sub:'alles von Hand',             ki:0,    present:true},
   {k:'teils',  label:'Teils automatisiert',  sub:'erste Tools/Abläufe laufen', ki:0.5,  present:true},
   {k:'voll',   label:'Voll automatisiert',   sub:'läuft mit KI ohne mich',     ki:1,    present:true},
 ];
-const KIVAL = {manuell:0, teils:0.5, voll:1};
+// 2-stufig für Stufen, die schon DIE Automatisierung SIND (3 Evergreen, 4 = 100K)
+const STATES_SIMPLE = [
+  {k:'nein', label:'Noch nicht', sub:'läuft noch nicht', present:false, neg:true},
+  {k:'ja',   label:'Ja, läuft',  sub:'automatisiert, ohne mich', present:true},
+];
+const KIVAL = {manuell:0, teils:0.5, voll:1, ja:1};
+const isPresent = k => !!k && k!=='nein';
 
 /* ===== 3) STAGES — Fragen, Kennzahlen & Benchmarks (⚠️ Entwurf) ===== */
 const STAGES = [
@@ -223,10 +230,10 @@ const STAGES = [
         metrics:[{key:'showup_w',q:'Anmeldung → Show-up-Rate',unit:'%',green:40,yellow:30},
                  {key:'close_w',q:'Webinar → Closing-Call-Rate',unit:'%',green:15,yellow:8}]}
     ]},
-  { key:'evergreen', icon:'⚙️', kicker:'Stufe 3', name:'Automatisieren', sub:'Dein Verkaufsweg läuft evergreen — ohne dich live.',
-    blocks:[{ id:'ever', have:'Läuft dein Verkauf evergreen/automatisiert?',
+  { key:'evergreen', icon:'⚙️', kicker:'Stufe 3', name:'Automatisieren', sub:'Dein Verkaufsweg läuft evergreen — ohne dich live.', simple:true,
+    blocks:[{ id:'ever', have:'Läuft dein Verkauf schon evergreen / automatisiert?',
       metrics:[{key:'roas',q:'ROAS (Umsatz ÷ Werbekosten)',unit:'x',green:2.5,yellow:1.5}]}]},
-  { key:'hundertk', icon:'🏔️', kicker:'Stufe 4 · Ziel', name:'Vollautomatisiert', sub:'Mehrere Quellen — das System macht 100K/Monat ohne dich.',
+  { key:'hundertk', icon:'🏔️', kicker:'Stufe 4 · Ziel', name:'Vollautomatisiert', sub:'Mehrere Quellen — das System macht 100K/Monat ohne dich.', simple:true,
     blocks:[{ id:'hk', have:'Macht dein Business ~100K/Monat vollautomatisiert?',
       metrics:[{key:'umsatz',q:'Monatsumsatz',unit:'€',green:100000,yellow:30000},
                {key:'quellen',q:'Anzahl Lead-Quellen / Funnel',unit:'Quellen',green:3,yellow:2}]}]},
@@ -247,7 +254,8 @@ function renderStage(){
   $('#stepCount').textContent=`Stufe ${idx} von ${STAGES.length-1}`;
   const blocksHtml=st.blocks.map(b=>{
     const a=answers[st.key][b.id]||{state:null,metrics:{}};
-    const statesHtml=STATES.map(s=>`<button type="button" data-st="${s.k}" class="${s.neg?'neg':''}" onclick="setState('${st.key}','${b.id}','${s.k}')">
+    const stateList=st.simple?STATES_SIMPLE:STATES;
+    const statesHtml=stateList.map(s=>`<button type="button" data-st="${s.k}" class="${s.neg?'neg':''}" onclick="setState('${st.key}','${b.id}','${s.k}')">
         <span class="tick">✓</span><span>${s.label}<small>${s.sub}</small></span></button>`).join('');
     const metricsHtml=b.metrics.map(m=>{
       const val=(a.metrics&&a.metrics[m.key]!=null)?a.metrics[m.key]:'';
@@ -277,8 +285,7 @@ function applyStateUI(blockId,state){
   const blk=document.querySelector(`.qblock[data-block="${blockId}"]`);
   if(!blk)return;
   blk.querySelectorAll('.states button').forEach(btn=>btn.classList.toggle('on',btn.dataset.st===state));
-  const present=STATES.find(s=>s.k===state)?.present;
-  blk.querySelector('.metrics').classList.toggle('show',!!present);
+  blk.querySelector('.metrics').classList.toggle('show',isPresent(state));
 }
 function setState(stageKey,blockId,state){
   answers[stageKey]=answers[stageKey]||{};
